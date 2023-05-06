@@ -11,7 +11,7 @@ import SwiftUI
 struct TDD_exampleApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TipsCalculator()
         }
     }
 }

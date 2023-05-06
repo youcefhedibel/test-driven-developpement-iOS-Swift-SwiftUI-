@@ -7,35 +7,95 @@
 
 import XCTest
 
-final class TDD_exampleUITests: XCTestCase {
+class whenContentViewIsShown: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
+    private var app: XCUIApplication!
+    private var contentViewPage: ContentViewPage!
+    
+    override func setUp() {
+        app = XCUIApplication()
+        contentViewPage = ContentViewPage(app: app)
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
-
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+    
+    
+    func testShouldMakeSureThatheTotalTextFieldContainsDefaultValue() {
+        XCTAssertEqual(contentViewPage.totalTextField.value as! String, "Enter total")
     }
+    
+    func testShouldMakeSureThe20PercentDefaultTipOptionIsSelected() {
+                
+        let segmentedControlButton = contentViewPage.tipPercentageSegmentedControl.buttons.element(boundBy: 1)
+        
+        XCTAssertEqual(segmentedControlButton.label, "20%")
+        XCTAssertTrue(segmentedControlButton.isSelected)
+    }
+    
+    override func tearDown() {
+       
+    }
+}
+
+class whenCalculateTipButtonIsPressedForValidInput: XCTestCase {
+    
+    private var app: XCUIApplication!
+    private var contentViewPage: ContentViewPage!
+    
+    override func setUp() {
+        app = XCUIApplication()
+        contentViewPage = ContentViewPage(app: app)
+        continueAfterFailure = false
+        app.launch()
+        
+        let totalTextField = contentViewPage.totalTextField
+        totalTextField.tap()
+        totalTextField.typeText("100")
+        
+        let calculateTipButton = contentViewPage.calculateTipButton
+        calculateTipButton.tap()
+    }
+    
+    func testShouldMakeSureThatTipIsDisplayedOnTheScreen() {
+                
+        let tipText = contentViewPage.tipText
+        let _ = tipText.waitForExistence(timeout: 0.5)
+        XCTAssertEqual(tipText.label,"20.00 DZD")
+    }
+}
+
+class whenCalculateTipButtonIsPressedForInvalidInput: XCTestCase {
+    
+    private var app: XCUIApplication!
+    
+    override func setUp() {
+        app = XCUIApplication()
+        continueAfterFailure = false
+        app.launch()
+        
+        let totalTextField = app.textFields["totalTextField"]
+        totalTextField.tap()
+        totalTextField.typeText("-100")
+        
+        let calculateTipButton = app.buttons["calculateTipButton"]
+        calculateTipButton.tap()
+    }
+    
+    func testShouldClearTipLabelForInvalidInput() {
+        
+        let tipText = app.staticTexts["tipText"]
+        let _ = tipText.waitForExistence(timeout: 0.5)
+        
+        XCTAssertEqual(tipText.label, "")
+    }
+    
+    func testShouldDisplayErrorMessageForInvalidInput() {
+        
+        let messageText = app.staticTexts["messageText"]
+        let _ = messageText.waitForExistence(timeout: 0.5)
+        
+        XCTAssertEqual(messageText.label, "Invalid Input")
+        
+    }
+    
 }
