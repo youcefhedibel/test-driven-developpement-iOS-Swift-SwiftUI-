@@ -3,7 +3,7 @@ This project demonstrates how to implement test-driven development (TDD) in Swif
 
 Requirements
 Xcode 12 or later
-Swift 5.3 or later
+Swift 5 or later
 Setup
 Clone the repository to your local machine.
 Open the project in Xcode.
