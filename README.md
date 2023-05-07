@@ -2,8 +2,8 @@
 This project demonstrates how to implement test-driven development (TDD) in Swift using the XCTest framework. TDD is a software development process in which tests are written before the code to be tested, with the aim of ensuring that the code meets the requirements and is of high quality.
 
 Requirements
-Xcode 12 or later
-Swift 5 or later
+#Xcode 12 or later
+#Swift 5 or later
 Setup
 Clone the repository to your local machine.
 Open the project in Xcode.
